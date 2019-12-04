@@ -1,10 +1,10 @@
 package ttt;
 //@author edwardsdw
-public class Edwards  {
+public class Edwards {
     private int type;
     private String name;
     
-    private static int[][] winConditions = new int[8][3];
+    private static final int[][] winConditions = new int[8][3];
     private boolean[] possibleWins;
     private boolean[] possibleLosses;
     
@@ -49,13 +49,42 @@ public class Edwards  {
         return 4;
     }
     public int play()  {
-        //...
+        int takeSpace;
+        Board.copy();
+        int[] attemptFor = new int[3];
+        if (winningMove(attemptFor, true) || winningMove(attemptFor, false))  {
+            for (int x = 0; x < attemptFor.length; x++)  {
+                if (Board.workspace[attemptFor[x]] == -1)
+                    takeSpace = attemptFor[x];
+            }
+        }
+        else if (setUp(attemptFor, true))  {
+            
+        }
+        return takeSpace;
+    }
+    private boolean setUp(int[] returnAttempt, boolean self)  {  //Discovers if the determined player can set up a win for the next turn
+        boolean found = false;
+        int subType;
+        int oppType;
+        if (self)
+            subType = type;
+        else  {
+            if (type == 1)
+                subType = 0;
+            else
+                subType = 1;
+        }
+        if (subType == 1)
+            oppType = 0;
+        else
+            oppType = 1;
+        
+        return found;
     }
     private boolean winningMove(int[] returnAttempt, boolean self)  {  //REDOING THE searchWin METHOD
-        int countMy = 0;
-        int countFree = 0;
-        Board.copy();
-        int subType = -1;
+        int countMy;
+        int subType;
         if (self)
             subType = type;
         else  {
@@ -68,18 +97,38 @@ public class Edwards  {
         boolean found = false;
         while (found && loopControl < winConditions.length)  {
             countMy = 0;
-            countFree = 0;
             for (int y = 0; y < 2; y++)  {
-                if (workspace[winConditions[loopControl][y]] == subType)
+                if (Board.workspace[winConditions[loopControl][y]] == subType)
                     countMy++;
-                if (workspace[winConditions[loopControl][y]] == -1)
-                    countFree;
             }
-            //INCOMPLETE -- still have to do stuff dependant on how many self-claimed/non-claimed spaces are in the section of the workspace
+            if (countMy == 2 && !blocked(winConditions[loopControl], true))  {
+                found = true;
+                returnAttempt = winConditions[loopControl];
+            }
             loopControl++;
         }
+        return found;
     }
-    private int determineClaim(int[] attempt)  {  //Takes in a win condition to attempt for and returns which space to take
-        
+    private boolean blocked(int[] attempt, boolean self)  {
+        boolean output = false;
+        int subType;
+        int oppType;
+        if (self)
+            subType = type;
+        else  {
+            if (type == 1)
+                subType = 0;
+            else
+                subType = 1;
+        }
+        if (subType == 1)
+            oppType = 0;
+        else
+            oppType = 1;
+        for (int place = 0; place < attempt.length; place++)  {
+            if (Board.workspace[attempt[place]] == oppType)
+                output = true;
+        }
+        return output;
     }
 }
