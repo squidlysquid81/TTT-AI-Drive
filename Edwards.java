@@ -51,4 +51,35 @@ public class Edwards  {
     public int play()  {
         //...
     }
+    private boolean winningMove(int[] returnAttempt, boolean self)  {  //REDOING THE searchWin METHOD
+        int countMy = 0;
+        int countFree = 0;
+        Board.copy();
+        int subType = -1;
+        if (self)
+            subType = type;
+        else  {
+            if (type == 1)
+                subType = 0;
+            else
+                subType = 1;
+        }
+        int loopControl = 0;
+        boolean found = false;
+        while (found && loopControl < winConditions.length)  {
+            countMy = 0;
+            countFree = 0;
+            for (int y = 0; y < 2; y++)  {
+                if (workspace[winConditions[loopControl][y]] == subType)
+                    countMy++;
+                if (workspace[winConditions[loopControl][y]] == -1)
+                    countFree;
+            }
+            //INCOMPLETE -- still have to do stuff dependant on how many self-claimed/non-claimed spaces are in the section of the workspace
+            loopControl++;
+        }
+    }
+    private int determineClaim(int[] attempt)  {  //Takes in a win condition to attempt for and returns which space to take
+        
+    }
 }
